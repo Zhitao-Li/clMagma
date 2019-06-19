@@ -1,0 +1,36 @@
+#//////////////////////////////////////////////////////////////////////////////
+#   -- MAGMA (version 2.0) --
+#      Univ. of Tennessee, Knoxville
+#      Univ. of California, Berkeley
+#      Univ. of Colorado, Denver
+#      @date
+#//////////////////////////////////////////////////////////////////////////////
+
+# push previous directory
+dir_stack := $(dir_stack) $(cdir)
+cdir      := interface_opencl
+# ----------------------------------------------------------------------
+
+
+# alphabetic order by base name (ignoring precision)
+libmagma_src += \
+	$(cdir)/alloc.cpp		\
+	$(cdir)/blas_z.cpp		\
+	$(cdir)/clmagma_runtime.cpp	\
+	$(cdir)/error.cpp		\
+	$(cdir)/interface.cpp		\
+	$(cdir)/set_get.cpp		\
+	$(cdir)/zset_get.cpp		\
+
+# sources for clcompile (which overlap with libmagma_src)
+clcompile_src += \
+	$(cdir)/clcompile.cpp		\
+	$(cdir)/clmagma_runtime.cpp	\
+	$(cdir)/error.cpp		\
+	clmagmablas/kernel_files.cpp	\
+
+
+# ----------------------------------------------------------------------
+# pop first directory
+cdir      := $(firstword $(dir_stack))
+dir_stack := $(wordlist 2, $(words $(dir_stack)), $(dir_stack))

@@ -1,0 +1,117 @@
+#//////////////////////////////////////////////////////////////////////////////
+#   -- MAGMA (version 2.0) --
+#      Univ. of Tennessee, Knoxville
+#      Univ. of California, Berkeley
+#      Univ. of Colorado, Denver
+#      @date
+#//////////////////////////////////////////////////////////////////////////////
+
+# push previous directory
+dir_stack := $(dir_stack) $(cdir)
+cdir      := clmagmablas
+# ----------------------------------------------------------------------
+
+
+hdr += \
+	$(cdir)/zaxpycp.h		\
+	$(cdir)/zcaxpycp.h		\
+	$(cdir)/zgeadd.h		\
+	$(cdir)/zlacpy.h		\
+	$(cdir)/zlacpy_cnjg.h		\
+	$(cdir)/zlag2c.h		\
+	$(cdir)/clag2z.h		\
+	$(cdir)/zlange.h		\
+	$(cdir)/zlanhe.h		\
+	$(cdir)/zlarfg.h		\
+	$(cdir)/zlascl.h		\
+	$(cdir)/zlascl_2x2.h		\
+	$(cdir)/zlascl_diag.h		\
+	$(cdir)/zlaset.h		\
+	$(cdir)/zlaset_band.h		\
+	$(cdir)/zlaswp.h		\
+	$(cdir)/zlat2c.h		\
+	$(cdir)/clat2z.h		\
+	$(cdir)/zswap.h			\
+	$(cdir)/zsymmetrize.h		\
+	$(cdir)/zsymmetrize_tiles.h	\
+	$(cdir)/ztranspose.h		\
+	$(cdir)/ztranspose_inplace.h	\
+	$(cdir)/magma_dmax_nan.h	\
+
+# alphabetic order by base name (ignoring precision)
+# OpenCL sources need to be here for precision generation,
+# but later we separate them out into CL_SRC
+libmagma_src += \
+	$(cdir)/empty.cl		\
+	$(cdir)/empty.cpp		\
+	$(cdir)/zaxpycp.cl		\
+	$(cdir)/zaxpycp.cpp		\
+	$(cdir)/zcaxpycp.cl		\
+	$(cdir)/zcaxpycp.cpp		\
+	$(cdir)/zgeadd.cl		\
+	$(cdir)/zgeadd.cpp		\
+	$(cdir)/zlacpy.cl		\
+	$(cdir)/zlacpy.cpp		\
+	$(cdir)/zlacpy_cnjg.cl		\
+	$(cdir)/zlacpy_cnjg.cpp		\
+	$(cdir)/zlag2c.cl		\
+	$(cdir)/zlag2c.cpp		\
+	$(cdir)/clag2z.cl		\
+	$(cdir)/clag2z.cpp		\
+	$(cdir)/zlange.cl		\
+	$(cdir)/zlange.cpp		\
+	$(cdir)/zlanhe.cl		\
+	$(cdir)/zlanhe.cpp		\
+	$(cdir)/zlarfg.cl		\
+	$(cdir)/zlarfg.cpp		\
+	$(cdir)/zlascl.cl		\
+	$(cdir)/zlascl.cpp		\
+	$(cdir)/zlascl_2x2.cl		\
+	$(cdir)/zlascl_2x2.cpp		\
+	$(cdir)/zlascl_diag.cl		\
+	$(cdir)/zlascl_diag.cpp		\
+	$(cdir)/zlaset.cl		\
+	$(cdir)/zlaset.cpp		\
+	$(cdir)/zlaset_band.cl		\
+	$(cdir)/zlaset_band.cpp		\
+	$(cdir)/zlaswp.cl		\
+	$(cdir)/zlaswp.cpp		\
+	$(cdir)/zlat2c.cl		\
+	$(cdir)/zlat2c.cpp		\
+	$(cdir)/clat2z.cl		\
+	$(cdir)/clat2z.cpp		\
+	$(cdir)/zswap.cl		\
+	$(cdir)/zswap.cpp		\
+	$(cdir)/zsymmetrize.cl		\
+	$(cdir)/zsymmetrize.cpp		\
+	$(cdir)/zsymmetrize_tiles.cl	\
+	$(cdir)/zsymmetrize_tiles.cpp	\
+	$(cdir)/ztranspose.cl		\
+	$(cdir)/ztranspose.cpp		\
+	$(cdir)/ztranspose_inplace.cl	\
+	$(cdir)/ztranspose_inplace.cpp	\
+	$(cdir)/kernel_files.cpp	\
+	$(cdir)/magma_dmax_nan.cl	\
+	$(cdir)/magma_dmax_nan.cpp	\
+
+# multi-GPU
+libmagma_src += \
+	$(cdir)/zbcyclic.cpp		\
+
+# to re-convert from CUDA
+libmagma_src += \
+	$(cdir)/dznrm2.cl		\
+	$(cdir)/dznrm2.cpp		\
+	$(cdir)/zgemm_reduce.cl		\
+	$(cdir)/zgemm_reduce.cpp	\
+	$(cdir)/zlarfbx.cl		\
+	$(cdir)/zlarfbx.cpp		\
+	$(cdir)/zlarfgx-v2.cl		\
+	$(cdir)/zlarfgx-v2.cpp		\
+	$(cdir)/zlarfx.cl		\
+
+
+# ----------------------------------------------------------------------
+# pop first directory
+cdir      := $(firstword $(dir_stack))
+dir_stack := $(wordlist 2, $(words $(dir_stack)), $(dir_stack))

@@ -1,0 +1,55 @@
+/*
+    -- MAGMA (version 1.1) --
+       Univ. of Tennessee, Knoxville
+       Univ. of California, Berkeley
+       Univ. of Colorado, Denver
+       @date
+
+       @generated from clmagmablas/clag2z.cl, mixed zc -> ds, Tue Jun 18 16:14:14 2019
+
+       auto-converted from slag2d.cu
+       @author Mark Gates
+*/
+#include "kernels_header.h"
+#include "slag2d.h"
+
+
+/*
+    Divides matrix into ceil( m/BLK_X ) x ceil( n/BLK_Y ) blocks.
+    Each block has BLK_X threads.
+    Each thread loops across one row, updating BLK_Y entries.
+    
+    Code similar to slat2d and zlaset.
+*/
+__kernel
+void slag2d_kernel(
+    magma_int_t m, magma_int_t n,
+    __global const float *SA, unsigned long SA_offset, magma_int_t ldsa,
+    __global double       *A, unsigned long A_offset,  magma_int_t lda )
+{
+    SA += SA_offset;
+    A += A_offset;
+
+    int ind = get_group_id(0)*BLK_X + get_local_id(0);
+    int iby = get_group_id(1)*BLK_Y;
+    /* check if full block-column */
+    bool full = (iby + BLK_Y <= n);
+    /* do only rows inside matrix */
+    if ( ind < m ) {
+        A  += ind + iby*lda;
+        SA += ind + iby*ldsa;
+        if ( full ) {
+            // full block-column
+            #pragma unroll
+            for( int j=0; j < BLK_Y; ++j ) {
+                A[j*lda] = MAGMA_D_MAKE( MAGMA_S_REAL( SA[j*ldsa] ), MAGMA_S_IMAG( SA[j*ldsa] ));
+            }
+        }
+        else {
+            // partial block-column
+            for( int j=0; j < BLK_Y && iby+j < n; ++j ) {
+                A[j*lda] = MAGMA_D_MAKE( MAGMA_S_REAL( SA[j*ldsa] ), MAGMA_S_IMAG( SA[j*ldsa] ));
+            }
+        }
+    }
+}

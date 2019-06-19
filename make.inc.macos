@@ -1,0 +1,89 @@
+#//////////////////////////////////////////////////////////////////////////////
+#   -- MAGMA (version 2.0) --
+#      Univ. of Tennessee, Knoxville
+#      Univ. of California, Berkeley
+#      Univ. of Colorado, Denver
+#      @date
+#//////////////////////////////////////////////////////////////////////////////
+
+# --------------------
+# programs
+#
+# Note: if clBLAS is compiled with Apple's cc,
+# you must use Apple's cc here, too, not GNU gcc/g++. Else the stack alignment
+# for float-complex seems to be different (clblasCgemm calls fails).
+
+CC        = cc
+CXX       = c++
+FORT      = gfortran
+
+ARCH      = ar
+ARCHFLAGS = cr
+RANLIB    = ranlib
+
+
+# --------------------
+# flags
+
+# use -m32 to compile with 32-bit long & pointers.
+# use -m64 to compile with 64-bit long & pointers (lp64). int is still 32-bit.
+# add -DNDEBUG to disable asserts and certain error checks.
+#
+# MacOS veclib has a bug where some single precision functions return
+# a double precision result, for instance slange.
+# This is observed with -m64, but oddly not with -m32.
+# The easiest fix is to replace those routines with correct ones from LAPACK.
+# See BLAS_FIX below.
+# Alternatively, don't link with the veclib/accelerate framework;
+# use a different BLAS and LAPACK library.
+
+# Use -fPIC to make shared (.so) and static (.a) library;
+# can be commented out if making only static library.
+FPIC      = -fPIC
+
+# Apple's clang compiler doesn't have OpenMP
+# gcc/g++/gfortran with OpenMP is available from http://hpc.sourceforge.net/
+# Add -fopenmp to CFLAGS and LDFLAGS as in make.inc.mkl-gcc
+CFLAGS    = -m64 -O3 $(FPIC) -DADD_ -Wall -Wshadow -DMAGMA_NOAFFINITY
+FFLAGS    = -m64 -O3 $(FPIC) -DADD_ -Wall -Wno-unused-dummy-argument
+F90FLAGS  = -m64 -O3 $(FPIC) -DADD_ -Wall -Wno-unused-dummy-argument -x f95-cpp-input
+LDFLAGS   = -m64     $(FPIC)
+
+# Options to do extra checks for non-standard things like variable length arrays;
+# it is safe to disable all these
+CFLAGS   += -pedantic -Wno-long-long
+#CFLAGS   += -Werror  # uncomment to ensure all warnings are dealt with
+
+# C++11 (gcc >= 4.7) is not required, but has benefits like atomic operations
+CXXFLAGS := $(CFLAGS) -std=c++11
+CFLAGS   += -std=c99
+
+# MacOS likes the library's path to be set
+INSTALL_NAME = -install_name @rpath/
+
+
+# --------------------
+# libraries
+
+LIB       = -framework Accelerate -lstdc++ -lm
+
+LIB      += -lclBLAS -framework OpenCL
+
+
+# --------------------
+# directories
+
+# define library directories preferably in your environment, or here.
+#clBLAS  ?= /opt/clBLAS
+-include make.check-clblas
+
+LIBDIR    = -L$(clBLAS)/lib
+
+INC       = -I$(clBLAS)/include
+
+
+# ========================================
+# replace single & single-complex BLAS functions with reference versions.
+# (i.e., functions that return float; subroutines do not need a fix.)
+# Prepends -lblas_fix to LIB; see Makefile.
+blas_fix = 1

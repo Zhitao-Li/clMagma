@@ -1,0 +1,148 @@
+#//////////////////////////////////////////////////////////////////////////////
+#   -- MAGMA (version 2.0) --
+#      Univ. of Tennessee, Knoxville
+#      Univ. of California, Berkeley
+#      Univ. of Colorado, Denver
+#      @date
+#//////////////////////////////////////////////////////////////////////////////
+
+# push previous directory
+dir_stack := $(dir_stack) $(cdir)
+cdir      := src
+# ----------------------------------------------------------------------
+
+
+# Loosely, the order is alphabetic in each section, but mixed precision,
+# driver, and multi-GPU routines are separated where it made sense.
+# Double precision "d" files that generate "s" files must also be listed
+# in ZSRC, despite the name.
+
+# ----------
+# BLAS wrappers
+libmagma_src += \
+	$(cdir)/cblas_z.cpp		\
+
+# ----------
+# Cholesky, GPU interface
+libmagma_src += \
+	$(cdir)/zcposv_gpu.cpp		\
+	\
+	$(cdir)/zposv_gpu.cpp		\
+	$(cdir)/zpotrf_gpu.cpp		\
+	$(cdir)/zpotrf2_gpu.cpp		\
+	$(cdir)/zpotri_gpu.cpp		\
+	$(cdir)/zpotrs_gpu.cpp		\
+	$(cdir)/zlauum_gpu.cpp		\
+	$(cdir)/ztrtri_gpu.cpp		\
+	\
+	$(cdir)/zpotrf_mgpu.cpp		\
+	$(cdir)/zpotrf2_mgpu.cpp	\
+	\
+	$(cdir)/zpotrf_msub.cpp		\
+	$(cdir)/zpotrf2_msub.cpp	\
+
+# Cholesky, CPU interface
+libmagma_src += \
+	$(cdir)/zposv.cpp		\
+	$(cdir)/zpotrf.cpp		\
+	$(cdir)/zpotri.cpp		\
+	$(cdir)/zlauum.cpp		\
+	$(cdir)/ztrtri.cpp		\
+
+# ----------
+# LU, GPU interface
+libmagma_src += \
+	$(cdir)/zgesv_gpu.cpp		\
+	$(cdir)/zgetrf_gpu.cpp		\
+	$(cdir)/zgetrf2_gpu.cpp		\
+	$(cdir)/zgetri_gpu.cpp		\
+	$(cdir)/zgetrs_gpu.cpp		\
+	\
+	$(cdir)/zgetrf_mgpu.cpp		\
+	$(cdir)/zgetrf2_mgpu.cpp	\
+	\
+	$(cdir)/zgetrf_msub.cpp		\
+	$(cdir)/zgetrf2_msub.cpp	\
+
+# LU, CPU interface
+libmagma_src += \
+	$(cdir)/zgesv.cpp		\
+	$(cdir)/zgetrf.cpp		\
+
+# ----------
+# QR and least squares, GPU interface
+libmagma_src += \
+	$(cdir)/zgels_gpu.cpp		\
+	$(cdir)/zgeqrf2_gpu.cpp		\
+	$(cdir)/zgeqrf_gpu.cpp		\
+	$(cdir)/zgeqr2x_gpu-v3.cpp	\
+	$(cdir)/zgeqrs_gpu.cpp		\
+	$(cdir)/zlarfb_gpu.cpp		\
+	$(cdir)/zunmqr_gpu.cpp		\
+	\
+	$(cdir)/zgeqrf_mgpu.cpp		\
+	\
+	$(cdir)/zgeqrf_msub.cpp		\
+
+# QR, CPU interface
+libmagma_src += \
+	$(cdir)/zgelqf.cpp		\
+	$(cdir)/zgeqlf.cpp		\
+	$(cdir)/zgeqrf.cpp		\
+	$(cdir)/zungqr.cpp		\
+	$(cdir)/zungqr2.cpp		\
+	$(cdir)/zunmlq.cpp		\
+	$(cdir)/zunmql.cpp		\
+	$(cdir)/zunmqr.cpp		\
+
+# ----------
+# symmetric indefinite factorization, CPU interface
+libmagma_src += \
+	$(cdir)/zhesv.cpp		\
+	$(cdir)/zhetrf.cpp		\
+	$(cdir)/zhetrf_nopiv.cpp	\
+	$(cdir)/zhetrf_nopiv_cpu.cpp	\
+	$(cdir)/zhetrf_nopiv_gpu.cpp	\
+	$(cdir)/zlahef_gpu.cpp	\
+
+# ----------
+# symmetric eigenvalues, CPU interface
+libmagma_src += \
+	$(cdir)/dsyevd.cpp		\
+	$(cdir)/zheevd.cpp		\
+	\
+	$(cdir)/dlaex0.cpp		\
+	$(cdir)/dlaex1.cpp		\
+	$(cdir)/dlaex3.cpp		\
+	$(cdir)/dstedx.cpp		\
+	$(cdir)/zhetrd.cpp		\
+	$(cdir)/zlatrd.cpp		\
+	$(cdir)/zstedx.cpp		\
+	$(cdir)/zunmtr.cpp		\
+
+# ----------
+# non-symmetric eigenvalues
+libmagma_src += \
+	$(cdir)/dgeev.cpp		\
+	$(cdir)/zgeev.cpp		\
+	$(cdir)/zgehrd.cpp		\
+	$(cdir)/zlahr2.cpp		\
+	$(cdir)/zlahru.cpp		\
+	$(cdir)/zunghr.cpp		\
+
+# ----------
+# SVD
+libmagma_src += \
+	$(cdir)/dgesdd.cpp		\
+	$(cdir)/zgesdd.cpp		\
+	$(cdir)/dgesvd.cpp		\
+	$(cdir)/zgesvd.cpp		\
+	$(cdir)/zgebrd.cpp		\
+	$(cdir)/zlabrd_gpu.cpp		\
+	$(cdir)/zunmbr.cpp		\
+
+
+# ----------------------------------------------------------------------
+# pop first directory
+cdir      := $(firstword $(dir_stack))
+dir_stack := $(wordlist 2, $(words $(dir_stack)), $(dir_stack))

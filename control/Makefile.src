@@ -1,0 +1,37 @@
+#//////////////////////////////////////////////////////////////////////////////
+#   -- MAGMA (version 2.0) --
+#      Univ. of Tennessee, Knoxville
+#      Univ. of California, Berkeley
+#      Univ. of Colorado, Denver
+#      @date
+#//////////////////////////////////////////////////////////////////////////////
+
+# push previous directory
+dir_stack := $(dir_stack) $(cdir)
+cdir      := control
+# ----------------------------------------------------------------------
+
+# alphabetic order
+libmagma_src += \
+	$(cdir)/abs.cpp			\
+	$(cdir)/auxiliary.cpp		\
+	$(cdir)/constants.cpp		\
+	$(cdir)/get_nb_tahiti.cpp	\
+	$(cdir)/magma_threadsetting.cpp	\
+	$(cdir)/magma_timer.cpp		\
+	$(cdir)/magma_winthread.cpp	\
+	$(cdir)/magma_znan_inf.cpp	\
+	$(cdir)/pthread_barrier.cpp	\
+	$(cdir)/sqrt.cpp		\
+	$(cdir)/strlcpy.cpp		\
+	$(cdir)/thread_queue.cpp	\
+	$(cdir)/trace.cpp		\
+	$(cdir)/xerbla.cpp		\
+	$(cdir)/zpanel_to_q.cpp		\
+	$(cdir)/zprint.cpp		\
+
+
+# ----------------------------------------------------------------------
+# pop first directory
+cdir      := $(firstword $(dir_stack))
+dir_stack := $(wordlist 2, $(words $(dir_stack)), $(dir_stack))

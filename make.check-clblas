@@ -1,0 +1,10 @@
+# check for clBLAS directory and give user hint how to set it
+#clBLAS    = /opt/clBLAS
+
+ifeq ($(clBLAS),)
+$(error Set $$clBLAS, preferably in your environment, e.g., run "export clBLAS=/opt/clBLAS" in ~/.bashrc, or "setenv clBLAS /opt/clBLAS" in ~/.cshrc)
+endif
+
+ifeq ($(wildcard $(clBLAS)),)
+$(error $$clBLAS=$(clBLAS) does not exist. Please set $$clBLAS to where clBLAS is installed.)
+endif

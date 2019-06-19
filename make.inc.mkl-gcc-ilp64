@@ -1,0 +1,79 @@
+#//////////////////////////////////////////////////////////////////////////////
+#   -- MAGMA (version 2.0) --
+#      Univ. of Tennessee, Knoxville
+#      Univ. of California, Berkeley
+#      Univ. of Colorado, Denver
+#      @date
+#//////////////////////////////////////////////////////////////////////////////
+
+# --------------------
+# programs
+
+CC        = gcc
+CXX       = g++
+FORT      = gfortran
+
+ARCH      = ar
+ARCHFLAGS = cr
+RANLIB    = ranlib
+
+
+# --------------------
+# flags
+
+# Use -fPIC to make shared (.so) and static (.a) library;
+# can be commented out if making only static library.
+FPIC      = -fPIC
+
+CFLAGS    = -O3 $(FPIC) -DADD_ -Wall -Wshadow -fopenmp -DMAGMA_WITH_MKL
+FFLAGS    = -O3 $(FPIC) -DADD_ -Wall -Wno-unused-dummy-argument
+F90FLAGS  = -O3 $(FPIC) -DADD_ -Wall -Wno-unused-dummy-argument -x f95-cpp-input
+LDFLAGS   =     $(FPIC)              -fopenmp
+
+# Defining MAGMA_ILP64 or MKL_ILP64 changes magma_int_t to int64_t in include/magma_types.h
+CFLAGS    += -DMKL_ILP64
+FFLAGS    += -fdefault-integer-8
+F90FLAGS  += -fdefault-integer-8
+
+# Options to do extra checks for non-standard things like variable length arrays;
+# it is safe to disable all these
+CFLAGS   += -pedantic -Wno-long-long
+#CFLAGS   += -Werror  # uncomment to ensure all warnings are dealt with
+
+# C++11 (gcc >= 4.7) is not required, but has benefits like atomic operations
+CXXFLAGS := $(CFLAGS) -std=c++11
+CFLAGS   += -std=c99
+
+
+# --------------------
+# libraries
+
+# IMPORTANT: this link line is for 64-bit int !!!!
+# For regular 64-bit builds using 64-bit pointers and 32-bit int,
+# use the lp64 library, not the ilp64 library. See make.inc.mkl-gcc or make.inc.mkl-icc.
+# see MKL Link Advisor at http://software.intel.com/sites/products/mkl/
+# gcc with MKL 10.3, Intel threads, 64-bit int
+# note -DMAGMA_ILP64 or -DMKL_ILP64, and -fdefault-integer-8 in FFLAGS above
+LIB       = -lmkl_intel_ilp64 -lmkl_intel_thread -lmkl_core -lpthread -lstdc++ -lm -liomp5 -lgfortran
+
+LIB      += -lclBLAS -lOpenCL
+
+
+# --------------------
+# directories
+
+# define library directories preferably in your environment, or here.
+# for MKL run, e.g.: source /opt/intel/composerxe/mkl/bin/mklvars.sh intel64
+#MKLROOT ?= /opt/intel/composerxe/mkl
+#clBLAS  ?= /opt/clBLAS
+#AMDAPP  ?= /opt/AMDAPP
+-include make.check-mkl
+-include make.check-clblas
+
+LIBDIR    = -L$(clBLAS)/lib64 \
+            -L$(AMDAPP)/lib/x64_64 \
+            -L$(MKLROOT)/lib/intel64
+
+INC       = -I$(clBLAS)/include \
+            -I$(AMDAPP)/include \
+            -I$(MKLROOT)/include

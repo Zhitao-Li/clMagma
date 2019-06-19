@@ -1,0 +1,62 @@
+#//////////////////////////////////////////////////////////////////////////////
+#   -- MAGMA (version 2.0) --
+#      Univ. of Tennessee, Knoxville
+#      Univ. of California, Berkeley
+#      Univ. of Colorado, Denver
+#      @date
+#//////////////////////////////////////////////////////////////////////////////
+
+# --------------------
+# programs
+
+CC        = gcc
+CXX       = g++
+FORT      = gfortran
+
+ARCH      = ar
+ARCHFLAGS = cr
+RANLIB    = ranlib
+
+
+# --------------------
+# flags
+
+# Use -fPIC to make shared (.so) and static (.a) library;
+# can be commented out if making only static library.
+FPIC      = -fPIC
+
+CFLAGS    = -O3 $(FPIC) -DADD_ -Wall -fopenmp 
+FFLAGS    = -O3 $(FPIC) -DADD_ -Wall -Wno-unused-dummy-argument
+F90FLAGS  = -O3 $(FPIC) -DADD_ -Wall -Wno-unused-dummy-argument -x f95-cpp-input
+LDFLAGS   =     $(FPIC)              -fopenmp
+
+# C++11 (gcc >= 4.7) is not required, but has benefits like atomic operations
+CXXFLAGS := $(CFLAGS) -std=c++11
+CFLAGS   += -std=c99
+
+
+# --------------------
+# libraries
+
+# gcc with OpenBLAS (includes LAPACK)
+LIB       = -lopenblas
+
+LIB      += -lclblas -lOpenCL
+
+
+# --------------------
+# directories
+
+# define library directories preferably in your environment, or here.
+#OPENBLASDIR ?= /usr/local/openblas
+#clBLAS      ?= /opt/clBLAS
+#AMDAPP      ?= /opt/AMDAPP
+-include make.check-openblas
+-include make.check-clblas
+
+LIBDIR    = -L$(clBLAS)/lib \
+            -L$(AMDAPP)/lib/x86_64 \
+            -L$(OPENBLASDIR)/lib
+
+INC       = -I$(clBLAS)/include \
+            -I$(AMDAPP)/include

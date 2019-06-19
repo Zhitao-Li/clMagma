@@ -1,0 +1,69 @@
+#//////////////////////////////////////////////////////////////////////////////
+#   -- MAGMA (version 2.0) --
+#      Univ. of Tennessee, Knoxville
+#      Univ. of California, Berkeley
+#      Univ. of Colorado, Denver
+#      @date
+#//////////////////////////////////////////////////////////////////////////////
+
+# --------------------
+# programs
+
+CC        = gcc
+CXX       = g++
+FORT      = gfortran
+
+ARCH      = ar
+ARCHFLAGS = cr
+RANLIB    = ranlib
+
+
+# --------------------
+# flags
+
+# Use -fPIC to make shared (.so) and static (.a) library;
+# can be commented out if making only static library.
+##
+## Our ATLAS installation has only static libraries, and one can't
+## build a shared library against a static library, so disable FPIC.
+##FPIC      = -fPIC
+
+CFLAGS    = -O3 $(FPIC) -DADD_ -Wall -fopenmp 
+FFLAGS    = -O3 $(FPIC) -DADD_ -Wall -Wno-unused-dummy-argument
+F90FLAGS  = -O3 $(FPIC) -DADD_ -Wall -Wno-unused-dummy-argument -x f95-cpp-input
+LDFLAGS   =     $(FPIC)              -fopenmp
+
+# C++11 (gcc >= 4.7) is not required, but has benefits like atomic operations
+CXXFLAGS := $(CFLAGS) -std=c++11
+CFLAGS   += -std=c99
+
+
+# --------------------
+# libraries
+
+# MAGMA no longer needs -lcblas
+# Depending on how ATLAS and LAPACK were compiled, you may need one or more of:
+# -lifcore -ldl -lf2c -lgfortran
+LIB       = -llapack -lf77blas -latlas -lstdc++ -lm -lgfortran -lifcore
+
+LIB      += -lclblas -lOpenCL
+
+
+# --------------------
+# directories
+
+# define library directories preferably in your environment, or here.
+#LAPACKDIR ?= /opt/lapack
+#ATLASDIR  ?= /opt/atlas
+#clBLAS    ?= /opt/clBLAS
+#AMDAPP    ?= /opt/AMDAPP
+-include make.check-atlas
+-include make.check-clblas
+
+LIBDIR    = -L$(clBLAS)/lib64 \
+            -L$(AMDAPP)/lib/x86_64 \
+            -L$(LAPACKDIR) \
+            -L$(ATLASDIR)/lib
+
+INC       = -I$(clBLAS)/include \
+            -I$(AMDAPP)/include
