@@ -19,7 +19,8 @@ public:
     // ------------------------------
     clmagma_runtime():
         m_context      ( NULL ),
-        m_num_devices  ( 0 )
+        m_num_devices  ( 0 ),
+        m_bExternalContext (false)
     {
         for( int dev=0; dev < MAX_DEVICES; ++dev ) {
             m_devices[dev] = NULL;
@@ -68,6 +69,7 @@ public:
     
     // ==============================
 private:
+    bool             m_bExternalContext;
     std::string      m_path;
     cl_platform_id   m_platform;
     cl_context       m_context;

@@ -216,6 +216,8 @@ void clmagma_runtime::init(std::vector<cl_device_id> devices, cl_context context
     char device_name[1024];
     cl_int err;
 
+    m_bExternalContext = true;
+
     m_num_devices = devices.size();
     for (int i=0;i<m_num_devices;i++)
     {
@@ -285,7 +287,7 @@ void clmagma_runtime::quit()
     }
     m_kernels.clear();
     
-    if ( m_context ) {
+    if ( m_context && !m_bExternalContext ) {
         err = clReleaseContext( m_context );
         check_error( err );
         m_context = NULL;
