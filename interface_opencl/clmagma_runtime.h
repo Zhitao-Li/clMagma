@@ -34,6 +34,7 @@ public:
     
     // ------------------------------
     void init( bool require_double=true );
+    void init(std::vector<cl_device_id> devices, cl_context context, bool require_double=true );
     void quit();
     int  compile_kernel( const char* kernel );
     int  compile_file( const char* infile, const char* outfile );

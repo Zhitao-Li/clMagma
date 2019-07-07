@@ -211,6 +211,62 @@ void clmagma_runtime::init( bool require_double )
 }
 
 
+void clmagma_runtime::init(std::vector<cl_device_id> devices, cl_context context, bool require_double)
+{
+    char device_name[1024];
+    cl_int err;
+
+    m_num_devices = devices.size();
+    for (int i=0;i<m_num_devices;i++)
+    {
+        m_devices[i] = devices[i];
+    }
+
+    if ( require_double )
+    {
+        unsigned int good = 0;
+        for( unsigned int dev=0; dev < m_num_devices; ++dev )
+        {
+            cl_device_fp_config config;
+            err = clGetDeviceInfo( m_devices[dev], CL_DEVICE_DOUBLE_FP_CONFIG, sizeof(config), &config, NULL );
+            check_error( err );
+            if ( config == 0 )
+            {
+                clGetDeviceInfo( m_devices[dev], CL_DEVICE_NAME, sizeof(device_name), device_name,  NULL );
+                //fprintf( stderr, "skippping device %s: doesn't support double precision\n", device_name );
+            }
+            else
+            {
+                // move good devices up
+                if ( dev != good )
+                    m_devices[good] = m_devices[dev];
+
+                ++good;
+            }
+        }
+        m_num_devices = good;
+    }
+
+    m_context = context;
+
+    // create map from kernel name -> file name
+    for( int i=0; i < c_kernel_files_len; ++i )
+    {
+        m_kernel_files[ c_kernel_files[i].name ] = c_kernel_files[i].file;
+    }
+
+    // path to search for .co cached OpenCL objects and .cl source code
+    const char* path = getenv( "CLMAGMA_PATH" );
+    if ( path == NULL )
+    {
+        path = getenv( "LD_LIBRARY_PATH" );
+        if ( path == NULL )
+            path = ".";
+    }
+    m_path = path;
+}
+
+
 // ------------------------------------------------------------
 /// Quit clMagma runtime.
 /// Releases all kernels and the OpenCL context.

@@ -10,6 +10,7 @@
 #define MAGMA_H
 
 #include <math.h> // for sqrt, sqrtf
+#include <vector>
 
 /* ------------------------------------------------------------
  * MAGMA BLAS Functions
@@ -40,6 +41,9 @@ magma_int_t magma_get_smlsize_divideconquer();
 // initialization
 magma_int_t
 magma_init( void );
+
+magma_int_t
+magma_init_1(std::vector<cl_device_id> devices, cl_context context);
 
 magma_int_t
 magma_init_opencl( cl_platform_id platform, cl_context context, magma_int_t setup_clBlas );
