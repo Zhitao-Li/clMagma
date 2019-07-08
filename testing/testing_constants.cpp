@@ -426,21 +426,21 @@ int main( int argc, char** argv )
     // ------------------------------------------------------------
     #ifdef HAVE_clBLAS
     s = gStatus;
-    check( clblas_order_const( MagmaRowMajor      ) == clblasRowMajor    );
-    check( clblas_order_const( MagmaColMajor      ) == clblasColumnMajor );
+    check( clblast_order_const( MagmaRowMajor      ) == CLBlastLayoutRowMajor    );
+    check( clblast_order_const( MagmaColMajor      ) == CLBlastLayoutColMajor );
 
-    check( clblas_trans_const( MagmaNoTrans       ) == clblasNoTrans     );
-    check( clblas_trans_const( MagmaTrans         ) == clblasTrans       );
-    check( clblas_trans_const( MagmaConjTrans     ) == clblasConjTrans   );
+    check( clblast_trans_const( MagmaNoTrans       ) == CLBlastTransposeNo     );
+    check( clblast_trans_const( MagmaTrans         ) == CLBlastTransposeYes       );
+    check( clblast_trans_const( MagmaConjTrans     ) == CLBlastTransposeConjugate   );
 
-    check( clblas_uplo_const(  MagmaUpper         ) == clblasUpper       );
-    check( clblas_uplo_const(  MagmaLower         ) == clblasLower       );
+    check( clblast_uplo_const(  MagmaUpper         ) == CLBlastTriangleUpper       );
+    check( clblast_uplo_const(  MagmaLower         ) == CLBlastTriangleLower       );
 
-    check( clblas_diag_const(  MagmaNonUnit       ) == clblasNonUnit     );
-    check( clblas_diag_const(  MagmaUnit          ) == clblasUnit        );
+    check( clblast_diag_const(  MagmaNonUnit       ) == CLBlastDiagonalNonUnit     );
+    check( clblast_diag_const(  MagmaUnit          ) == CLBlastDiagonalUnit        );
 
-    check( clblas_side_const(  MagmaLeft          ) == clblasLeft        );
-    check( clblas_side_const(  MagmaRight         ) == clblasRight       );
+    check( clblast_side_const(  MagmaLeft          ) == CLBlastSideLeft        );
+    check( clblast_side_const(  MagmaRight         ) == CLBlastSideRight       );
     printf( "MAGMA  -> clblas_xxxxx_const   %s\n", (s == gStatus ? "ok" : "failed"));
     #endif
 

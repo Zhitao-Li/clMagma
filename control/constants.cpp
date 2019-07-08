@@ -451,7 +451,7 @@ const char* lapack_storev_const( magma_storev_t magma_const )
 // Convert magma constants to clBLAS constants.
 
 #ifdef HAVE_clBLAS
-const int magma2clblas_constants[] =
+const int magma2clblast_constants[] =
 {
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -464,62 +464,62 @@ const int magma2clblas_constants[] =
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
     0,                      // 100
-    clblasRowMajor,         // 101: MagmaRowMajor
-    clblasColumnMajor,      // 102: MagmaColMajor
+    CLBlastLayoutRowMajor,         // 101: MagmaRowMajor
+    CLBlastLayoutColMajor,      // 102: MagmaColMajor
     0, 0, 0, 0, 0, 0, 0, 0,
-    clblasNoTrans,          // 111: MagmaNoTrans
-    clblasTrans,            // 112: MagmaTrans
-    clblasConjTrans,        // 113: MagmaConjTrans
+    CLBlastTransposeNo,          // 111: MagmaNoTrans
+    CLBlastTransposeYes,            // 112: MagmaTrans
+    CLBlastTransposeConjugate,        // 113: MagmaConjTrans
     0, 0, 0, 0, 0, 0, 0,
-    clblasUpper,            // 121: MagmaUpper
-    clblasLower,            // 122: MagmaLower
+    CLBlastTriangleUpper,            // 121: MagmaUpper
+    CLBlastTriangleLower,            // 122: MagmaLower
     0, 0, 0, 0, 0, 0, 0, 0,
-    clblasNonUnit,          // 131: MagmaNonUnit
-    clblasUnit,             // 132: MagmaUnit
+    CLBlastDiagonalNonUnit,          // 131: MagmaNonUnit
+    CLBlastDiagonalUnit,             // 132: MagmaUnit
     0, 0, 0, 0, 0, 0, 0, 0,
-    clblasLeft,             // 141: MagmaLeft
-    clblasRight,            // 142: MagmaRight
+    CLBlastSideLeft,             // 141: MagmaLeft
+    CLBlastSideRight,            // 142: MagmaRight
     0, 0, 0, 0, 0, 0, 0, 0
 };
 
 extern "C"
-clblasOrder       clblas_order_const( magma_order_t magma_const )
+CLBlastLayout_       clblast_order_const( magma_order_t magma_const )
 {
     assert( magma_const >= MagmaRowMajor );
     assert( magma_const <= MagmaColMajor );
-    return (clblasOrder)     magma2clblas_constants[ magma_const ];
+    return (CLBlastLayout_)     magma2clblast_constants[ magma_const ];
 }
 
 extern "C"
-clblasTranspose   clblas_trans_const( magma_trans_t magma_const )
+CLBlastTranspose_   clblast_trans_const( magma_trans_t magma_const )
 {
     assert( magma_const >= MagmaNoTrans   );
     assert( magma_const <= MagmaConjTrans );
-    return (clblasTranspose) magma2clblas_constants[ magma_const ];
+    return (CLBlastTranspose_) magma2clblast_constants[ magma_const ];
 }
 
 extern "C"
-clblasUplo        clblas_uplo_const ( magma_uplo_t magma_const )
+CLBlastTriangle_        clblast_uplo_const ( magma_uplo_t magma_const )
 {
     assert( magma_const >= MagmaUpper );
     assert( magma_const <= MagmaLower );
-    return (clblasUplo)      magma2clblas_constants[ magma_const ];
+    return (CLBlastTriangle_)      magma2clblast_constants[ magma_const ];
 }
 
 extern "C"
-clblasDiag        clblas_diag_const ( magma_diag_t magma_const )
+CLBlastDiagonal_        clblast_diag_const ( magma_diag_t magma_const )
 {
     assert( magma_const >= MagmaNonUnit );
     assert( magma_const <= MagmaUnit    );
-    return (clblasDiag)      magma2clblas_constants[ magma_const ];
+    return (CLBlastDiagonal_)      magma2clblast_constants[ magma_const ];
 }
 
 extern "C"
-clblasSide        clblas_side_const ( magma_side_t magma_const )
+CLBlastSide_        clblast_side_const ( magma_side_t magma_const )
 {
     assert( magma_const >= MagmaLeft  );
     assert( magma_const <= MagmaRight );
-    return (clblasSide)      magma2clblas_constants[ magma_const ];
+    return (CLBlastSide_)      magma2clblast_constants[ magma_const ];
 }
 #endif  // HAVE_clBLAS
 

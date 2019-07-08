@@ -50,12 +50,9 @@ magma_init()
     g_runtime.load_kernels( 1, &clmagma_kernels );
     gContext = g_runtime.get_context();
     
-    cl_int err = clblasSetup();
-    check_error( err );
-    
     g_event = NULL;
 
-    return err;
+    return 0;
 }
 
 extern "C" magma_int_t
@@ -65,12 +62,9 @@ magma_init_1(std::vector<cl_device_id> devices, cl_context context)
     g_runtime.load_kernels(1, &clmagma_kernels);
     gContext = g_runtime.get_context();
 
-    cl_int err = clblasSetup();
-    check_error(err);
-
     g_event = NULL;
 
-    return err;
+    return 0;
 }
 
 // --------------------
@@ -96,7 +90,6 @@ magma_init_1(std::vector<cl_device_id> devices, cl_context context)
 extern "C" magma_int_t
 magma_finalize()
 {
-    clblasTeardown();
     g_runtime.quit();
     return MAGMA_SUCCESS;
 }

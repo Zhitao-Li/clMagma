@@ -41,7 +41,7 @@ CFLAGS   += -std=c99
 # gcc with OpenBLAS (includes LAPACK)
 LIB       = -lopenblas
 
-LIB      += -lclBLAS -lOpenCL
+LIB      += -lclblast -lOpenCL
 
 
 # --------------------
@@ -49,7 +49,7 @@ LIB      += -lclBLAS -lOpenCL
 
 # define library directories preferably in your environment, or here.
 OPENBLASDIR ?= /usr/lib/x86_64-linux-gnu/openblas/
-clBLAS      ?= /usr/lib/x86_64-linux-gnu/
+clBLAS      ?= /usr/local/
 -include make.check-openblas
 -include make.check-clblas
 

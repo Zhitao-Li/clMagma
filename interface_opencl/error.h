@@ -5,7 +5,7 @@
 
 // overloaded C++ functions to deal with errors
 void magma_xerror( cl_int         err, const char* func, const char* file, int line );
-void magma_xerror( clblasStatus   err, const char* func, const char* file, int line );
+void magma_xerror( CLBlastStatusCode   err, const char* func, const char* file, int line );
 //void magma_xerror( magma_int_t  err, const char* func, const char* file, int line );
 
 #ifdef __cplusplus
@@ -14,7 +14,7 @@ extern "C" {
 
 // In magma.h, we also provide magma_strerror.
 const char* magma_clGetErrorString( cl_int error );
-const char* magma_clblasGetErrorString( clblasStatus error );
+const char* magma_clblasGetErrorString( CLBlastStatusCode error );
 
 #ifdef __cplusplus
 }

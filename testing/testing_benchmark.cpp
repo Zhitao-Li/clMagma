@@ -186,12 +186,11 @@ int main( int argc, char** argv)
 
 
         // DGEMM
-        clblasDgemm(
-                clblasColumnMajor,
-                clblasNoTrans, clblasNoTrans, m, n, k, alpha, d_A, 0, ldda,
+        CLBlastDgemm(
+                CLBlastLayoutColMajor,
+                CLBlastTransposeNo, CLBlastTransposeNo, m, n, k, alpha, d_A, 0, ldda,
                 d_B, 0, lddb, beta, d_C, 0, lddc, 
-                1, &queue,
-                0, NULL, NULL);
+                &queue, NULL);
         clFinish(queue);
 
         int kk;
@@ -202,12 +201,12 @@ int main( int argc, char** argv)
                 if(j==0){
                     t_start = magma_wtime();
                 }
-                clblasStatus err = clblasDgemm(
-                    clblasColumnMajor,
-                    clblasNoTrans, clblasNoTrans, m, n, k, alpha, d_A, 0, ldda,
+                CLBlastStatusCode err = CLBlastDgemm(
+                    CLBlastLayoutColMajor,
+                    CLBlastTransposeNo, CLBlastTransposeNo, m, n, k, alpha, d_A, 0, ldda,
                     d_B, 0, lddb, beta, d_C, 0, lddc, 
-                    1, &queue,
-                    0, NULL, NULL);
+                    &queue,
+                    NULL);
                 assert(err == CL_SUCCESS);
                 //clFlush(queue);
             }
@@ -230,12 +229,11 @@ int main( int argc, char** argv)
                 if(j==0){
                     t_start = magma_wtime();
                 }        
-                clblasDgemm(
-                    clblasColumnMajor,
-                    clblasNoTrans, clblasNoTrans, m, n, k, alpha, d_A, 0, ldda,
+                CLBlastDgemm(
+                    CLBlastLayoutColMajor,
+                    CLBlastTransposeNo, CLBlastTransposeNo, m, n, k, alpha, d_A, 0, ldda,
                     d_B, 0, lddb, beta, d_C, 0, lddc, 
-                    1, &queue,
-                    0, NULL, NULL);
+                    &queue, NULL);
                 clFinish(queue);
             }
             t_end = magma_wtime();

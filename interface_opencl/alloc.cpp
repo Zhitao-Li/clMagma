@@ -28,7 +28,7 @@ magma_malloc( magma_ptr* ptrPtr, size_t size )
         size = sizeof(magmaDoubleComplex);
     cl_int err;
     *ptrPtr = clCreateBuffer( g_runtime.get_context(), CL_MEM_READ_WRITE, size, NULL, &err );
-    if ( err != clblasSuccess ) {
+    if ( err != CLBlastSuccess ) {
         return MAGMA_ERR_DEVICE_ALLOC;
     }
     return MAGMA_SUCCESS;
@@ -40,7 +40,7 @@ extern "C" magma_int_t
 magma_free( magma_ptr ptr )
 {
     cl_int err = clReleaseMemObject( ptr );
-    if ( err != clblasSuccess ) {
+    if ( err != CLBlastSuccess ) {
         return MAGMA_ERR_INVALID_PTR;
     }
     return MAGMA_SUCCESS;

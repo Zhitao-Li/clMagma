@@ -16,9 +16,9 @@ void magma_xerror( cl_int err, const char* func, const char* file, int line )
 
 
 // --------------------
-void magma_xerror( clblasStatus err, const char* func, const char* file, int line )
+void magma_xerror( CLBlastStatusCode err, const char* func, const char* file, int line )
 {
-    if ( err != clblasSuccess ) {
+    if ( err != CLBlastSuccess ) {
         fprintf( stderr, "clBLAS error: %s (%d) in %s at %s:%d\n",
                  magma_clblasGetErrorString( err ), err, func, file, line );
     }
@@ -101,27 +101,27 @@ const char* magma_clGetErrorString( cl_int error )
 
 // ----------------------------------------
 extern "C"
-const char* magma_clblasGetErrorString( clblasStatus error )
+const char* magma_clblasGetErrorString( CLBlastStatusCode error )
 {
     switch( error ) {        
-        case clblasNotImplemented     : return "clblasNotImplemented";
-        case clblasNotInitialized     : return "clblasNotInitialized";
-        case clblasInvalidMatA        : return "clblasInvalidMatA";
-        case clblasInvalidMatB        : return "clblasInvalidMatB";
-        case clblasInvalidMatC        : return "clblasInvalidMatC";
-        case clblasInvalidVecX        : return "clblasInvalidVecX";
-        case clblasInvalidVecY        : return "clblasInvalidVecY";
-        case clblasInvalidDim         : return "clblasInvalidDim";
-        case clblasInvalidLeadDimA    : return "clblasInvalidLeadDimA";
-        case clblasInvalidLeadDimB    : return "clblasInvalidLeadDimB";
-        case clblasInvalidLeadDimC    : return "clblasInvalidLeadDimC";
-        case clblasInvalidIncX        : return "clblasInvalidIncX";
-        case clblasInvalidIncY        : return "clblasInvalidIncY";
-        case clblasInsufficientMemMatA: return "clblasInsufficientMemMatA";
-        case clblasInsufficientMemMatB: return "clblasInsufficientMemMatB";
-        case clblasInsufficientMemMatC: return "clblasInsufficientMemMatC";
-        case clblasInsufficientMemVecX: return "clblasInsufficientMemVecX";
-        case clblasInsufficientMemVecY: return "clblasInsufficientMemVecY";
+        case CLBlastNotImplemented     : return "CLBlastNotImplemented";
+        case CLBlastNotImplemented+1     : return "CLBlastNotInitialized";
+        case CLBlastInvalidMatrixA        : return "CLBlastInvalidMatrixA";
+        case CLBlastInvalidMatrixB        : return "CLBlastInvalidMatrixB";
+        case CLBlastInvalidMatrixC        : return "CLBlastInvalidMatrixC";
+        case CLBlastInvalidVectorX        : return "CLBlastInvalidVectorX";
+        case CLBlastInvalidVectorY        : return "CLBlastInvalidVectorY";
+        case CLBlastInvalidDimension         : return "CLBlastInvalidDimension";
+        case CLBlastInvalidLeadDimA    : return "CLBlastInvalidLeadDimA";
+        case CLBlastInvalidLeadDimB    : return "CLBlastInvalidLeadDimB";
+        case CLBlastInvalidLeadDimC    : return "CLBlastInvalidLeadDimC";
+        case CLBlastInvalidIncrementX        : return "CLBlastInvalidIncrementX";
+        case CLBlastInvalidIncrementY        : return "CLBlastInvalidIncrementY";
+        case CLBlastInsufficientMemoryA: return "CLBlastInsufficientMemoryA";
+        case CLBlastInsufficientMemoryB: return "CLBlastInsufficientMemoryB";
+        case CLBlastInsufficientMemoryC: return "CLBlastInsufficientMemoryC";
+        case CLBlastInsufficientMemoryX: return "CLBlastInsufficientMemoryX";
+        case CLBlastInsufficientMemoryY: return "CLBlastInsufficientMemoryY";
         
         default: return "unknown clblas error code";
     }

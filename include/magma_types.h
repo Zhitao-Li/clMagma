@@ -92,7 +92,28 @@ typedef double real_Double_t;
     #define MAGMA_C_CNJG(a)       cuConjf(a)
     
 #elif defined(HAVE_clBLAS)
-    #include <clBLAS.h>
+    #include <clblast_c.h>
+
+    typedef cl_float2 FloatComplex;
+    typedef cl_double2 DoubleComplex;
+
+    static __inline FloatComplex
+    floatComplex(float real, float imag)
+    {
+        FloatComplex z;
+        z.s[0] = real;
+        z.s[1] = imag;
+        return z;
+    }
+
+    static __inline DoubleComplex
+    doubleComplex(double real, double imag)
+    {
+        DoubleComplex z;
+        z.s[0] = real;
+        z.s[1] = imag;
+        return z;
+    }
     
     typedef cl_command_queue  magma_queue_t;
     typedef cl_event          magma_event_t;
@@ -645,13 +666,13 @@ static inline char lapacke_storev_const( magma_storev_t magma_const ) { return *
 
 
 // --------------------
-// Convert MAGMA constants to clBLAS constants.
+// Convert MAGMA constants to CLBlast constants.
 #if defined(HAVE_clBLAS)
-clblasOrder          clblas_order_const( magma_order_t order );
-clblasTranspose      clblas_trans_const( magma_trans_t trans );
-clblasUplo           clblas_uplo_const ( magma_uplo_t  uplo  );
-clblasDiag           clblas_diag_const ( magma_diag_t  diag  );
-clblasSide           clblas_side_const ( magma_side_t  side  );
+CLBlastLayout_    clblast_order_const(magma_order_t order);
+CLBlastTranspose_ clblast_trans_const(magma_trans_t trans);
+CLBlastTriangle_  clblast_uplo_const(magma_uplo_t uplo);
+CLBlastDiagonal_  clblast_diag_const(magma_diag_t diag);
+CLBlastSide_      clblast_side_const(magma_side_t side);
 #endif
 
 

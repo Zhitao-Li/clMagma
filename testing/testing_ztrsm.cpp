@@ -154,13 +154,13 @@ int main( int argc, char** argv)
                                      d_B, lddb );
             #elif defined(HAVE_clBLAS)
             if ( ! skip_clblas ) {
-                clblasZtrsm( clblasColumnMajor,
-                             clblas_side_const(opts.side), clblas_uplo_const(opts.uplo),
-                             clblas_trans_const(opts.transA), clblas_diag_const(opts.diag),
+                CLBlastZtrsm( CLBlastLayoutColMajor,
+                             clblast_side_const(opts.side), clblast_uplo_const(opts.uplo),
+                             clblast_trans_const(opts.transA), clblast_diag_const(opts.diag),
                              M, N,
                              alpha, d_A, 0, ldda,
                                     d_B, 0, lddb,
-                             1, &opts.queue, 0, NULL, NULL );
+                             &opts.queue, NULL );
             }
             #endif
             cublas_time = magma_sync_wtime( opts.queue ) - cublas_time;

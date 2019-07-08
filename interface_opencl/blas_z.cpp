@@ -75,11 +75,10 @@ magma_izamax(
     magma_setvector( 1, sizeof(unsigned int), &imax_cpu, 1, dimax, 0, 1, queue );
     
 //printf( "%s clblasiZamax\n", __func__ );
-    cl_int err = clblasiZamax(
+    cl_int err = CLBlastiZamax(
         n, dimax, 0,
         dx, dx_offset, incx,
-        scratchBuff,
-        1, &queue, 0, NULL, g_event);
+        &queue, g_event);
     check_error( err );
     
 //printf( "%s getvector\n", __func__ );
@@ -157,11 +156,11 @@ magma_zaxpy(
     magmaDoubleComplex_ptr       dy, size_t dy_offset, magma_int_t incy,
     magma_queue_t queue )
 {
-    cl_int err = clblasZaxpy(
+    cl_int err = CLBlastZaxpy(
         n, alpha,
         dx, dx_offset, incx,
         dy, dy_offset, incy,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     check_error( err );
 }
 
@@ -197,10 +196,10 @@ magma_zcopy(
     if ( n <= 0 )
         return;
     
-    cl_int err = clblasZcopy( n,
+    cl_int err = CLBlastZcopy( n,
         dx, dx_offset, incx,
         dy, dy_offset, incy,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     check_error( err );
 }
 
@@ -351,12 +350,12 @@ magma_zrot(
     double c, magmaDoubleComplex s,
     magma_queue_t queue )
 {
-    cl_int err = clblasZrot(
+    cl_int err = CLBlastZrot(
         n,
         dx, dx_offset, incx,
         dy, dy_offset, incy,
         c, s,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     check_error( err );
 }
 #endif // REAL
@@ -402,12 +401,12 @@ magma_zdrot(
     double c, double s,
     magma_queue_t queue )
 {
-    cl_int err = clblasZdrot(
+    cl_int err = CLBlastDrot(
         n,
         dx, dx_offset, incx,
         dy, dy_offset, incy,
         c, s,
-        1, &queue, 0, NULL, g_event);
+        &queue, g_event);
     check_error( err );
 }
 #endif // COMPLEX
@@ -426,12 +425,12 @@ magma_zrotm(
     magmaDouble_const_ptr param, size_t param_offset,
     magma_queue_t queue )
 {
-    cl_int err = clblasZrotm(
+    cl_int err = CLBlastZrotm(
         n,
         dx, dx_offset, incx,
         dy, dy_offset, incy,
         param, param_offset,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     check_error( err );
 }
 
@@ -449,13 +448,13 @@ magma_zrotmg(
     magmaDouble_ptr    param, size_t param_offset,
     magma_queue_t queue )
 {
-    cl_int err = clblasZrotmg(
+    cl_int err = CLBlastZrotmg(
         d1, d1_offset,
         d2, d2_offset,
         x1, x1_offset,
         y1, y1_offset,
         param, param_offset,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     check_error( err );
 }
 #endif // REAL
@@ -488,9 +487,9 @@ magma_zscal(
     if (n <= 0)
         return;
 
-    cl_int err = clblasZscal(
+    cl_int err = CLBlastZscal(
         n, alpha, dx, dx_offset, incx,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     clFlush(queue);
     check_error( err );
 }
@@ -524,9 +523,9 @@ magma_zdscal(
     if (n <= 0)
         return;
 
-    cl_int err = clblasZdscal(
+    cl_int err = CLBlastHscal(
         n, alpha, dx, dx_offset, incx,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     clFlush(queue);
     check_error( err );
 }
@@ -564,10 +563,10 @@ magma_zswap(
     if (n <= 0)
         return;
 
-    cl_int err = clblasZswap(
+    cl_int err = CLBlastZswap(
         n, dx, dx_offset, incx,
            dy, dy_offset, incy,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     clFlush(queue);
     check_error( err );
 }
@@ -636,14 +635,14 @@ magma_zgemv(
     if ( m <= 0 || n <= 0 )
         return;
 
-    cl_int err = clblasZgemv(
-        clblasColumnMajor,
-        clblas_trans_const( transA ),
+    cl_int err = CLBlastZgemv(
+        CLBlastLayoutColMajor,
+        clblast_trans_const( transA ),
         m, n,
         alpha, dA, dA_offset, ldda,
                dx, dx_offset, incx,
         beta,  dy, dy_offset, incy,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     clFlush(queue);
     check_error( err );
 }
@@ -692,13 +691,13 @@ magma_zgerc(
     magmaDoubleComplex_ptr       dA, size_t dA_offset, magma_int_t ldda,
     magma_queue_t queue )
 {
-    cl_int err = clblasZgerc(
-        clblasColumnMajor,
+    cl_int err = CLBlastZgerc(
+        CLBlastLayoutColMajor,
         m, n,
         alpha, dx, dx_offset, incx,
                dy, dy_offset, incy,
                dA, dA_offset, ldda,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     check_error( err );
 }
 
@@ -747,13 +746,13 @@ magma_zgeru(
     magmaDoubleComplex_ptr       dA, size_t dA_offset, magma_int_t ldda,
     magma_queue_t queue )
 {
-    cl_int err = clblasZgeru(
-        clblasColumnMajor,
+    cl_int err = CLBlastZgeru(
+        CLBlastLayoutColMajor,
         m, n,
         alpha, dx, dx_offset, incx,
                dy, dy_offset, incy,
                dA, dA_offset, ldda,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     check_error( err );
 }
 #endif // COMPLEX
@@ -879,13 +878,13 @@ magma_zher(
     magmaDoubleComplex_ptr       dA, size_t dA_offset, magma_int_t ldda,
     magma_queue_t queue )
 {
-    cl_int err = clblasZher(
-        clblasColumnMajor,
-        clblas_uplo_const( uplo ),
+    cl_int err = CLBlastZher(
+        CLBlastLayoutColMajor,
+        clblast_uplo_const( uplo ),
         n,
         alpha, dx, dx_offset, incx,
                dA, dA_offset, ldda,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     check_error( err );
 }
 
@@ -934,14 +933,14 @@ magma_zher2(
     magmaDoubleComplex_ptr       dA, size_t dA_offset, magma_int_t ldda,
     magma_queue_t queue )
 {
-    cl_int err = clblasZher2(
-        clblasColumnMajor,
-        clblas_uplo_const( uplo ),
+    cl_int err = CLBlastZher2(
+        CLBlastLayoutColMajor,
+        clblast_uplo_const( uplo ),
         n,
         alpha, dx, dx_offset, incx,
                dy, dy_offset, incy,
                dA, dA_offset, ldda,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     check_error( err );
 }
 
@@ -990,23 +989,17 @@ magma_ztrmv(
     if ( n <= 0 )
         return;
 
-    magmaDoubleComplex_ptr dwork;
-    magma_zmalloc( &dwork, (1 + (n-1)*abs(incx)) );
-    
-    cl_int err = clblasZtrmv(
-        clblasColumnMajor,
-        clblas_uplo_const( uplo ),
-        clblas_trans_const( trans ),
-        clblas_diag_const( diag ),
+    cl_int err = CLBlastZtrmv(
+        CLBlastLayoutColMajor,
+        clblast_uplo_const( uplo ),
+        clblast_trans_const( trans ),
+        clblast_diag_const( diag ),
         n,
         dA, dA_offset, ldda,
         dx, dx_offset, incx,
-        dwork,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     clFlush(queue);
     check_error( err );
-    
-    magma_free( dwork );
 }
 
 // --------------------
@@ -1055,15 +1048,15 @@ magma_ztrsv(
     if ( n <= 0 )
         return;
 
-    cl_int err = clblasZtrsv(
-        clblasColumnMajor,
-        clblas_uplo_const( uplo ),
-        clblas_trans_const( trans ),
-        clblas_diag_const( diag ),
+    cl_int err = CLBlastZtrsv(
+        CLBlastLayoutColMajor,
+        clblast_uplo_const( uplo ),
+        clblast_trans_const( trans ),
+        clblast_diag_const( diag ),
         n,
         dA, dA_offset, ldda,
         dx, dx_offset, incx,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     clFlush(queue);
     check_error( err );
 }
@@ -1134,15 +1127,15 @@ magma_zgemm(
     if ( m <= 0 || n <= 0 || k <= 0 )
         return;
 
-    cl_int err = clblasZgemm(
-        clblasColumnMajor,
-        clblas_trans_const( transA ),
-        clblas_trans_const( transB ),
+    cl_int err = CLBlastZgemm(
+        CLBlastLayoutColMajor,
+        clblast_trans_const( transA ),
+        clblast_trans_const( transB ),
         m, n, k,
         alpha, dA, dA_offset, ldda,
                dB, dB_offset, lddb,
         beta,  dC, dC_offset, lddc,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     clFlush(queue);
     check_error( err );
 }
@@ -1206,15 +1199,15 @@ magma_zsymm(
     magmaDoubleComplex_ptr       dC, size_t dC_offset, magma_int_t lddc,
     magma_queue_t queue )
 {
-    cl_int err = clblasZsymm(
-        clblasColumnMajor,
-        clblas_side_const( side ),
-        clblas_uplo_const( uplo ),
+    cl_int err = CLBlastZsymm(
+        CLBlastLayoutColMajor,
+        clblast_side_const( side ),
+        clblast_uplo_const( uplo ),
         m, n,
         alpha, dA, dA_offset, ldda,
                dB, dB_offset, lddb,
         beta,  dC, dC_offset, lddc,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     check_error( err );
 }
 
@@ -1272,14 +1265,14 @@ magma_zsyrk(
     if (n <= 0 || k <= 0)
         return;
 
-    cl_int err = clblasZsyrk(
-        clblasColumnMajor,
-        clblas_uplo_const( uplo ),
-        clblas_trans_const( trans ),
+    cl_int err = CLBlastZsyrk(
+        CLBlastLayoutColMajor,
+        clblast_uplo_const( uplo ),
+        clblast_trans_const( trans ),
         n, k,
         alpha, dA, dA_offset, ldda,
         beta,  dC, dC_offset, lddc,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     check_error( err );
 }
 
@@ -1343,15 +1336,15 @@ magma_zsyr2k(
     magmaDoubleComplex_ptr       dC, size_t dC_offset, magma_int_t lddc,
     magma_queue_t queue )
 {
-    cl_int err = clblasZsyr2k(
-        clblasColumnMajor,
-        clblas_uplo_const( uplo ),
-        clblas_trans_const( trans ),
+    cl_int err = CLBlastZsyr2k(
+        CLBlastLayoutColMajor,
+        clblast_uplo_const( uplo ),
+        clblast_trans_const( trans ),
         n, k,
         alpha, dA, dA_offset, ldda,
                dB, dB_offset, lddb,
         beta,  dC, dC_offset, lddc,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     check_error( err );
 }
 
@@ -1418,15 +1411,15 @@ magma_zhemm(
     if ( m <= 0 || n <= 0)
         return;
 
-    cl_int err = clblasZhemm(
-        clblasColumnMajor,
-        clblas_side_const( side ),
-        clblas_uplo_const( uplo ),
+    cl_int err = CLBlastZhemm(
+        CLBlastLayoutColMajor,
+        clblast_side_const( side ),
+        clblast_uplo_const( uplo ),
         m, n,
         alpha, dA, dA_offset, ldda,
                dB, dB_offset, lddb,
         beta,  dC, dC_offset, lddc,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     clFlush(queue);
     check_error( err );
 }
@@ -1485,14 +1478,14 @@ magma_zherk(
     if (n <= 0 || k <= 0)
         return;
 
-    cl_int err = clblasZherk(
-        clblasColumnMajor,
-        clblas_uplo_const( uplo ),
-        clblas_trans_const( trans ),
+    cl_int err = CLBlastZherk(
+        CLBlastLayoutColMajor,
+        clblast_uplo_const( uplo ),
+        clblast_trans_const( trans ),
         n, k,
         alpha, dA, dA_offset, ldda,
         beta,  dC, dC_offset, lddc,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     clFlush(queue);
     check_error( err );
 }
@@ -1560,15 +1553,15 @@ magma_zher2k(
     if (n <= 0 || k <= 0)
         return;
 
-    cl_int err = clblasZher2k(
-        clblasColumnMajor,
-        clblas_uplo_const( uplo ),
-        clblas_trans_const( trans ),
+    cl_int err = CLBlastZher2k(
+        CLBlastLayoutColMajor,
+        clblast_uplo_const( uplo ),
+        clblast_trans_const( trans ),
         n, k,
         alpha, dA, dA_offset, ldda,
         dB, dB_offset, lddb,
         beta, dC, dC_offset, lddc,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     clFlush(queue);
     check_error( err );
 }
@@ -1661,16 +1654,16 @@ printf( "ztrmm done\n" );
 }
 else {
 #endif
-    cl_int err = clblasZtrmm(
-        clblasColumnMajor,
-        clblas_side_const( side ),
-        clblas_uplo_const( uplo ),
-        clblas_trans_const( trans ),
-        clblas_diag_const( diag ),
+    cl_int err = CLBlastZtrmm(
+        CLBlastLayoutColMajor,
+        clblast_side_const( side ),
+        clblast_uplo_const( uplo ),
+        clblast_trans_const( trans ),
+        clblast_diag_const( diag ),
         m, n,
         alpha, dA, dA_offset, ldda,
                dB, dB_offset, lddb,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     clFlush(queue);
     check_error( err );
 #ifdef PRECISION_z
@@ -1763,16 +1756,16 @@ printf( "ztrsm( %c, %c, %c, %c, %d, %d, %d, %d )\n",
     free( B );
 printf( "ztrsm done\n" );
 #else
-    cl_int err = clblasZtrsm(
-        clblasColumnMajor,
-        clblas_side_const( side ),
-        clblas_uplo_const( uplo ),
-        clblas_trans_const( trans ),
-        clblas_diag_const( diag ),
+    cl_int err = CLBlastZtrsm(
+        CLBlastLayoutColMajor,
+        clblast_side_const( side ),
+        clblast_uplo_const( uplo ),
+        clblast_trans_const( trans ),
+        clblast_diag_const( diag ),
         m, n,
         alpha, dA, dA_offset, ldda,
                dB, dB_offset, lddb,
-        1, &queue, 0, NULL, g_event );
+        &queue, g_event );
     clFlush(queue);
     check_error( err );
 #endif
